@@ -1,0 +1,190 @@
+================================================================================
+        iOS iCloud Bypass Tool - Prerequisites Checklist
+================================================================================
+
+IMPORTANT: Complete ALL steps below BEFORE running bypass.ps1
+
+================================================================================
+PART 1: DEVICE PREPARATION
+================================================================================
+
+[ ] Step 1: Jailbreak Your iPhone
+    ─────────────────────────────
+    Tool Options:
+    • checkra1n (for A7-A11 devices)
+    • palera1n (rootful or rootless)
+    
+    Requirements:
+    • Device must boot into jailbroken state
+    • You should see Cydia or Sileo app on home screen
+    
+    Verification:
+    • Open Cydia/Sileo - if it opens, jailbreak is active
+    • If device is on activation screen, jailbreak may still be active
+
+--------------------------------------------------------------------------------
+
+[ ] Step 2: Install OpenSSH Package
+    ────────────────────────────────
+    Instructions:
+    1. Open Cydia or Sileo
+    2. Search for "OpenSSH"
+    3. Install the package
+    4. Reboot if prompted
+    
+    Default Credentials:
+    • Username: root
+    • Password: alpine
+    
+    Verification:
+    • Package shows as "Installed" in Cydia/Sileo
+
+--------------------------------------------------------------------------------
+
+[ ] Step 3: Connect iPhone to PC
+    ─────────────────────────────
+    Requirements:
+    • Use original or high-quality USB cable
+    • Connect directly to PC (not through hub)
+    
+    Verification:
+    • Windows should play device connected sound
+    • Device appears in Windows Explorer (if iTunes installed)
+    • iTunes shows device (if installed)
+
+================================================================================
+PART 2: WINDOWS SETUP
+================================================================================
+
+[ ] Step 4: Download libimobiledevice
+    ──────────────────────────────────
+    Download Link:
+    https://github.com/L1ghtmann/libimobiledevice/releases
+    
+    Required Files (place in tools\ folder):
+    • iproxy.exe
+    • ideviceinfo.exe (optional but helpful)
+    • All .dll files included in the release
+    
+    Verification:
+    • Open Command Prompt
+    • Run: .\tools\iproxy.exe --help
+    • Should display usage information
+
+--------------------------------------------------------------------------------
+
+[ ] Step 5: Download PuTTY Tools
+    ─────────────────────────────
+    Download Link:
+    https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
+    
+    Required Files (place in tools\ folder):
+    • plink.exe (64-bit recommended)
+    • pscp.exe (64-bit recommended)
+    
+    Verification:
+    • Open Command Prompt
+    • Run: .\tools\plink.exe --help
+    • Should display usage information
+
+--------------------------------------------------------------------------------
+
+[ ] Step 6: Place mobileactivationd Binary
+    ───────────────────────────────────────
+    File Name: mobileactivationd
+    Expected Size: 2-3 MB
+    Location: Project root folder (same as bypass.ps1, NOT in tools\)
+    
+    Source: Extract from jailbroken iPhone with bypass already applied
+    Path on iPhone: /usr/libexec/mobileactivationd
+    
+    Verification:
+    • File exists in root folder
+    • File size is approximately 2-3 MB
+
+================================================================================
+PART 3: VERIFY SSH ACCESS (MANUAL TEST)
+================================================================================
+
+[ ] Step 7: Test SSH Connection
+    ────────────────────────────
+    This verifies everything is working before running the main script.
+    
+    Test Procedure:
+    
+    1. Open Command Prompt (cmd.exe)
+    
+    2. Start port forwarding:
+       .\tools\iproxy.exe 4444 44
+       (Leave this running)
+    
+    3. Open NEW Command Prompt window
+    
+    4. Test SSH connection:
+       .\tools\plink.exe -pw alpine root@localhost -P 4444
+    
+    5. If prompted about host key, type "y" and press Enter
+    
+    6. If successful, you should see iPhone terminal prompt:
+       iPhone:~ root#
+    
+    7. Type "exit" to disconnect
+    
+    8. Close iproxy window (Ctrl+C)
+    
+    If SSH test FAILS:
+    • Verify OpenSSH is installed on device
+    • Check USB cable connection
+    • Re-jailbreak device if needed
+    • Try different USB port
+
+================================================================================
+FINAL CHECKLIST
+================================================================================
+
+Before running bypass.ps1, verify:
+
+    [  ] Device is jailbroken and shows Cydia/Sileo
+    [  ] OpenSSH package is installed
+    [  ] iPhone is connected via USB
+    [  ] iproxy.exe is in tools\ folder
+    [  ] plink.exe is in tools\ folder
+    [  ] pscp.exe is in tools\ folder
+    [  ] All .dll files are in tools\ folder
+    [  ] mobileactivationd is in root folder (2-3 MB)
+    [  ] Manual SSH test was successful
+
+================================================================================
+READY TO RUN
+================================================================================
+
+If all checks pass:
+
+1. Open PowerShell
+2. Navigate to the project folder
+3. Run the bypass script:
+   .\bypass.ps1
+
+================================================================================
+TROUBLESHOOTING QUICK REFERENCE
+================================================================================
+
+Problem: "Device not found"
+Solution: Check USB cable, try different port, install iTunes for drivers
+
+Problem: "Connection refused"  
+Solution: Verify OpenSSH installed, re-jailbreak if needed
+
+Problem: "Permission denied"
+Solution: Password changed from 'alpine', check device SSH settings
+
+Problem: Scripts won't run
+Solution: Run in PowerShell:
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Problem: Antivirus blocking tools
+Solution: Add the project folder to antivirus exclusions
+
+For more help, see README.md
+
+================================================================================
